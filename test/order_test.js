@@ -37,5 +37,14 @@ describe("Order", function () {
         });
     });
 
-
+    describe("Get Order", function () {
+        it("get by id", function (done) {
+            request(app).get("/users/" + sofia.id + "/orders/" + 1).expect(200).end(function (err, result) {
+                if (err) {
+                    return done(err);
+                }
+                done();
+            });
+        });
+    });
 });
