@@ -7,10 +7,14 @@ var should = require("should");
 
 describe("Order", function () {
     var sofia;
+    var kaylaOrder;
     before(function (done) {
         db.User.create({name: "sofia"}).success(function(user) {
             sofia = user;
-            done();
+            db.Order.create({receiver: "kayla"}).success(function (order) {
+                kaylaOrder = order;
+                done();
+            }).fail(done);
         }).fail(function(err) {
             done(err);
         });
@@ -40,6 +44,16 @@ describe("Order", function () {
     describe("Get Order", function () {
         it("get by id", function (done) {
             request(app).get("/users/" + sofia.id + "/orders/" + 1).expect(200).end(function (err, result) {
+                if (err) {
+                    return done(err);
+                }
+                done();
+            });
+        });
+
+
+        it("return 404", function (done) {
+            request(app).get("/users/" + sofia.id + "/orders/" + -1).expect(404).end(function (err, result) {
                 if (err) {
                     return done(err);
                 }
