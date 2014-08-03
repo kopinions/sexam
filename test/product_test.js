@@ -34,10 +34,12 @@ describe("Product", function () {
                     return done(err);
                 }
 
-                console.log(result.body);
+
 
                 result.body.length.should.eql(1);
+
                 result.body[0].name.should.eql("little apple");
+                result.body[0].uri.should.eql("/products/" + apple.id);
                 result.body[0].price.should.eql(2);
                 done();
             });

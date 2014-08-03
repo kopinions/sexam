@@ -7,7 +7,16 @@ router.get('/', function(req, res) {
         if (err) {
             return res.send(500);
         }
-        return res.send(results);
+        var resultsWithUri = results.map(function (result) {
+            var re = {};
+            re["uri"] = "/products/" + result.id;
+            re["name"] = result.name;
+            re["price"] = result.price;
+            return re;
+        });
+
+        return res.send(resultsWithUri);
+
     });
 
 });
