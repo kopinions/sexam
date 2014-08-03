@@ -35,20 +35,33 @@ describe("Order", function () {
                 });
         }
         function createUserAndOrder(done) {
+            db.Order.hasMany(db.OrderItem);
+            db.OrderItem.belongsTo(db.Order);
             db.sequelize.sync({force: true}).success(function () {
-                db.User.create({name: "sofia"}).success(function (user) {
-                    sofia = user;
-                    db.Order.create({receiver: "kayla", shippingAddress: "beijing"}).success(function (order) {
-                        kaylaOrder = order;
-                        user.setOrders([order]);
-                        done();
-                    }).fail(function (err) {
-                        done(err);
-                    });
-                }).fail(function (err) {
-                    done(err);
-                });
+                db.Product.create({name: 'little apple', price: 10}).success(
+                    function (product) {
+                        db.User.create({name: "sofia"}).success(function (user) {
+                            sofia = user;
+                            db.Order.create({receiver: "kayla", shippingAddress: "beijing"}).success(function (order) {
+                                kaylaOrder = order;
 
+                                db.OrderItem.create({quantity: 1}).success(function (orderItem) {
+                                    orderItem.setProduct(product);
+                                    order.setOrderItems([orderItem]);
+//                                    orderItem.setOrder(order);
+                                    user.setOrders([order]);
+                                    done();
+                                });
+
+
+                            }).fail(function (err) {
+                                done(err);
+                            });
+                        }).fail(function (err) {
+                            done(err);
+                        });
+                    }
+                );
             });
         }
 

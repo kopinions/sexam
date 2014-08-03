@@ -12,7 +12,6 @@ module.exports = {
           updatedAt: DataTypes.DATE
       });
       done();
-    done()
   },
   down: function(migration, DataTypes, done) {
     // add reverting commands here, calling 'done' when finished
