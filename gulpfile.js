@@ -3,12 +3,13 @@ var exec = require('child_process').exec;
 var mocha = require('gulp-mocha');
 
 
-gulp.task('deploy', ['build'], function(cb) {
-	 exec('fly production', function (err, stdout, stderr) {
+gulp.task('deploy', function(cb) {
+	exec('fly deploy:production', function (err, stdout, stderr) {
+
     if (err) {
     	return cb(err);
     }
-
+        console.log(stdout);
     cb();
   });
 });
