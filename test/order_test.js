@@ -10,41 +10,43 @@ describe("Order", function () {
     var kaylaOrder;
 
     before(function (done) {
-        db.User.create({name: "sofia"}).success(function (user) {
-            sofia = user;
-            db.Order.create({receiver: "kayla"}).success(function (order) {
-                kaylaOrder = order;
-                done();
-            }).fail(function (err) {
-                done(err);
-            });
-        }).fail(function (err) {
-            done(err);
+
+        prepareCleanDatabase(function(err, result) {
+            if (err) {
+                done("not clean success");
+            }
+
+            createUserAndOrder(done);
         });
-    });
 
-    afterEach(function (done) {
-        db.Order.destroy({receiver: "samiu"}).success(function (affect) {
-            done();
-        }).fail(function (err) {
 
-            done(err);
-        });
-    });
-
-    after(function (done) {
-        db.User
-            .destroy({})
-            .success(function (affectRow) {
-                db.Order.destroy({receiver: "kayla"}).success(function (affect) {
+        function prepareCleanDatabase(done) {
+            db.User
+                .destroy({})
+                .success(function (affectRow) {
+                    db.Order.destroy({}).success(function (affect) {
+                        done();
+                    }).fail(function (err) {
+                        done(err);
+                    });
+                })
+                .fail(function (err) {
+                    done(err);
+                });
+        }
+        function createUserAndOrder(done) {
+            db.User.create({name: "sofia"}).success(function (user) {
+                sofia = user;
+                db.Order.create({receiver: "kayla"}).success(function (order) {
+                    kaylaOrder = order;
                     done();
                 }).fail(function (err) {
                     done(err);
                 });
-            })
-            .fail(function (err) {
+            }).fail(function (err) {
                 done(err);
             });
+        }
 
     });
 
@@ -55,6 +57,9 @@ describe("Order", function () {
                 if (err) {
                     return done(err);
                 }
+
+                result.body.length.should.eql(1);
+
                 done();
             });
         });

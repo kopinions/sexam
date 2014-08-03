@@ -12,7 +12,11 @@ router.get('/:user_id/orders', function (req, res) {
         if (err || !result) {
             return res.send(404);
         }
-        res.send(200);
+        db.Order.find({where: {UserId: req.params.user_id}}).complete(function (err, results) {
+            res.send(200, ["xx"]);
+        });
+
+
     });
 });
 
