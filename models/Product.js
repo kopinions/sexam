@@ -5,7 +5,8 @@ module.exports = function(sequlize, DataType) {
             type: DataType.INTEGER,
             autoIncrement: true,
             primaryKey: true
-        }
+        },
+        price: DataType.FLOAT
     });
     return Product;
 };

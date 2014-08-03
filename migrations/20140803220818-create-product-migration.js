@@ -1,6 +1,6 @@
 module.exports = {
     up: function (migration, DataTypes, done) {
-        migration.createTable('Product', {
+        migration.createTable('Products', {
             id: {
                 type: DataTypes.INTEGER,
                 primaryKey: true,
@@ -8,7 +8,8 @@ module.exports = {
             },
             name: DataTypes.STRING,
             createdAt: DataTypes.DATE,
-            updatedAt: DataTypes.DATE
+            updatedAt: DataTypes.DATE,
+            price: DataTypes.FLOAT
         });
         done();
     },

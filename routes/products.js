@@ -17,12 +17,11 @@ router.get('/:id', function (req, res) {
 });
 
 router.post('/', function (req, res) {
-    db.Product.create({name: req.body.name}).complete(function(err, result) {
+    db.Product.create({name: req.body.name, price: req.body.price}).complete(function(err, result) {
+        console.log(err);
         if (err) {
             return res.send(400);
         }
-        console.log(result
-        );
         res.location('/products/' + result.id);
         res.send(201);
     });

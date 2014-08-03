@@ -14,11 +14,8 @@ describe("Product", function () {
         });
     });
 
-    after(function(done) {
+    afterEach(function(done) {
         db.Product.destroy({name: "big apple"}).success(function (affectRow) {
-            if (affectRow === 0) {
-                return done("not delete product");
-            }
             done();
         });
     });
@@ -65,6 +62,7 @@ describe("Product", function () {
 
                 db.Product.find({where: {name: "big apple"}}).success(function(findProduct) {
                     res.get('location').should.eql('/products/' + findProduct.id);
+                    findProduct.price.should.eql(1);
                 }).fail(function (err) {
                     return done(err);
                 });
