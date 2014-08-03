@@ -9,3 +9,4 @@ worker_connections: 768
 log_dir: /var/log/nginx
 error_log: /var/log/nginx/error.log
 access_log: /var/log/nginx/access.log
+error_page: /home/vagrant/public/500.html

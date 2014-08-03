@@ -1,15 +1,14 @@
 var Flightplan = require('flightplan');
 
 var plan = new Flightplan();
-var repo = "http://github.com/sjkyspa";
+var repo = "https://github.com/sjkyspa/sexam.git";
 plan.briefing({
   debug: true,
   destinations: {
     'production': [
       {
-        host: 'localhost',
+        host: '192.168.33.10',
         username: 'vagrant',
-        port: 2222,
         privateKey: "/Users/twer/.vagrant.d/insecure_private_key"
       }
     ]
@@ -38,7 +37,7 @@ plan.remote(['deploy'], function(remote) {
   remote.with('cd /home/vagrant/sexam', function() {
   	remote.ls('-l');
   	remote.exec('npm install');
-//    remote.exec('NODE_ENV=production node_modules/.bin/sequelize db:migrate')
-    remote.exec('nohup node app.js &')
+    remote.exec('NODE_ENV=production ./node_modules/.bin/sequelize db:migrate')
+    remote.exec('nohup node bin/www &')
   });
 });
