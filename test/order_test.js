@@ -8,16 +8,44 @@ var should = require("should");
 describe("Order", function () {
     var sofia;
     var kaylaOrder;
+
     before(function (done) {
-        db.User.create({name: "sofia"}).success(function(user) {
+        db.User.create({name: "sofia"}).success(function (user) {
             sofia = user;
             db.Order.create({receiver: "kayla"}).success(function (order) {
                 kaylaOrder = order;
                 done();
-            }).fail(done);
-        }).fail(function(err) {
+            }).fail(function (err) {
+                done(err);
+            });
+        }).fail(function (err) {
             done(err);
         });
+    });
+
+    afterEach(function (done) {
+        db.Order.destroy({receiver: "samiu"}).success(function (affect) {
+            done();
+        }).fail(function (err) {
+            console.log(err);
+            done(err);
+        });
+    });
+
+    after(function (done) {
+        db.User
+            .destroy({})
+            .success(function (affectRow) {
+                db.Order.destroy({receiver: "kayla"}).success(function (affect) {
+                    done();
+                }).fail(function (err) {
+                    done(err);
+                });
+            })
+            .fail(function (err) {
+                done(err);
+            });
+
     });
 
 
@@ -65,13 +93,27 @@ describe("Order", function () {
 
     describe("Post", function () {
         it("create user order", function (done) {
-            request(app).post("/users/" + sofia.id + "/orders").send({receiver: "samiu", shippingAddress: "beijing"}).expect(201).end(function (err, res) {
-                if (err) {
-                    return done(err);
-                }
+            request(app)
+                .post("/users/" + sofia.id + "/orders")
+                .send({receiver: "samiu", shippingAddress: "beijing"})
+                .expect(201)
+                .end(function (err, res) {
+                    if (err) {
+                        return done(err);
+                    }
 
-                done();
-            });
+                    db.Order.find({where: {receiver: "samiu"}}).success(function (findedOrder) {
+                        if (findedOrder === null) {
+                            return done("not find order");
+                        }
+                        res.get('location').should.eql("/users/" + sofia.id + "/orders/" + findedOrder.id);
+                        findedOrder.receiver.should.eql("samiu");
+                        findedOrder.shippingAddress.should.eql("beijing");
+                        done();
+                    }).fail(function (err) {
+                        return done(err);
+                    });
+                });
         });
     });
 });

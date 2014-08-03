@@ -38,7 +38,13 @@ router.post('/:user_id/orders', function (req, res) {
         if (err || !result) {
             return res.send(404);
         }
-        res.send(201);
+        db.Order.create({receiver: req.body.receiver, shippingAddress: req.body.shippingAddress}).complete(function (err, order) {
+            if (err || !order) {
+                return res.send(400);
+            }
+            res.location("/users/" + result.id + "/orders/" + order.id);
+            res.send(201);
+        });
     });
 });
 module.exports = router;
