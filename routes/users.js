@@ -15,14 +15,14 @@ router.get('/:user_id/orders', function (req, res) {
                 return res.send(404);
             }
 
-            return res.send(200, result.orders);
-//            console.log(result);
-//            db.Order.findAll({where: {UserId: req.params.user_id}}).complete(function (err, results) {
-//
-//                res.send(200, results);
-//            });
-
-
+            var stat = result.orders.map(function (order) {
+                return {
+                    uri: "/users/" + req.params.user_id + "/orders/" + order.id,
+                    receiver: order.receiver,
+                    shippingAddress: order.shippingAddress
+                };
+            });
+            return res.send(200, stat);
         });
     });
 });

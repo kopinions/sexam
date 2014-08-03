@@ -38,7 +38,7 @@ describe("Order", function () {
             db.sequelize.sync({force: true}).success(function () {
                 db.User.create({name: "sofia"}).success(function (user) {
                     sofia = user;
-                    db.Order.create({receiver: "kayla"}).success(function (order) {
+                    db.Order.create({receiver: "kayla", shippingAddress: "beijing"}).success(function (order) {
                         kaylaOrder = order;
                         user.setOrders([order]);
                         done();
@@ -57,13 +57,16 @@ describe("Order", function () {
 
     describe("Get orders", function () {
         it("get", function (done) {
-            request(app).get("/users/" + sofia.id + "/orders").expect(200).end(function (err, result) {
+            var ordersUri = "/users/" + sofia.id + "/orders";
+            request(app).get(ordersUri).expect(200).end(function (err, result) {
                 if (err) {
                     return done(err);
                 }
 
                 result.body.length.should.eql(1);
                 result.body[0].receiver.should.eql("kayla");
+                result.body[0].shippingAddress.should.eql("beijing");
+                result.body[0].uri.should.eql(ordersUri + "/" + kaylaOrder.id );
                 done();
             });
         });
