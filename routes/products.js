@@ -18,7 +18,15 @@ router.get('/:id', function (req, res) {
 });
 
 router.post('/', function (req, res) {
-    res.send(201);
+    db.Product.create({name: req.params.name}).complete(function(err, result) {
+        if (err) {
+            return res.send(400);
+        }
+
+        res.location('/products/' + result.id);
+        res.send(201);
+    });
+
 });
 
 module.exports = router;

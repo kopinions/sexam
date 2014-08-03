@@ -3,10 +3,13 @@ process.env.NODE_ENV = "development";
 var request = require("supertest");
 var app = require("../app");
 var db = require("../models");
+var should = require("should");
 
 describe("Product", function () {
-    beforeEach(function(done) {
-        db.Product.create({name: "little apple"}).success(function() {
+    var apple;
+    before(function(done) {
+        db.Product.create({name: "little apple"}).success(function(result) {
+            apple = result;
             done();
         });
     });
@@ -25,7 +28,7 @@ describe("Product", function () {
 
     describe("Get product", function () {
         it("get by id", function (done) {
-            request(app).get("/products/1").expect(200).end(function (err, result) {
+            request(app).get("/products/" + apple.id).expect(200).end(function (err, result) {
                 if (err) {
                     return done(err);
                 }
@@ -46,11 +49,11 @@ describe("Product", function () {
 
     describe("Post", function() {
         it("create product", function (done) {
-            request(app).post("/products").send({name: "bit apple"}).expect(201).end(function (err, result) {
+            request(app).post("/products").send({name: "bit apple"}).expect(201).end(function (err, res) {
                 if (err) {
                     return done(err);
                 }
-
+                res.get('location').should.eql('/products/' + (apple.id +1));
                 done();
             });
         });
