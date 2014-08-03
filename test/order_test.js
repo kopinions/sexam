@@ -35,16 +35,20 @@ describe("Order", function () {
                 });
         }
         function createUserAndOrder(done) {
-            db.User.create({name: "sofia"}).success(function (user) {
-                sofia = user;
-                db.Order.create({receiver: "kayla"}).success(function (order) {
-                    kaylaOrder = order;
-                    done();
+            db.sequelize.sync({force: true}).success(function () {
+                db.User.create({name: "sofia"}).success(function (user) {
+                    sofia = user;
+                    db.Order.create({receiver: "kayla"}).success(function (order) {
+                        kaylaOrder = order;
+                        user.setOrders([order]);
+                        done();
+                    }).fail(function (err) {
+                        done(err);
+                    });
                 }).fail(function (err) {
                     done(err);
                 });
-            }).fail(function (err) {
-                done(err);
+
             });
         }
 
@@ -59,7 +63,7 @@ describe("Order", function () {
                 }
 
                 result.body.length.should.eql(1);
-
+                result.body[0].receiver.should.eql("kayla");
                 done();
             });
         });

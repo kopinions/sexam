@@ -1,4 +1,6 @@
 module.exports = function(sequlize, DataType) {
+
+    var Order = sequlize.import(__dirname + "/Order");
     var User = sequlize.define("User", {
         name: DataType.STRING,
         id: {
@@ -7,5 +9,9 @@ module.exports = function(sequlize, DataType) {
             primaryKey: true
         }
     });
+
+    Order.belongsTo(User);
+    User.hasMany(Order);
+
     return User;
 };

@@ -6,17 +6,24 @@ router.get('/', function (req, res) {
     res.send('respond with a resource');
 });
 
+db.User.hasMany(db.Order);
 
 router.get('/:user_id/orders', function (req, res) {
-    db.User.find(req.params.user_id).complete(function (err, result) {
-        if (err || !result) {
-            return res.send(404);
-        }
-        db.Order.find({where: {UserId: req.params.user_id}}).complete(function (err, results) {
-            res.send(200, ["xx"]);
+    db.sequelize.sync().done(function() {
+        db.User.find({where: {id: req.params.user_id}, include: [db.Order]}).complete(function (err, result) {
+            if (err || !result) {
+                return res.send(404);
+            }
+
+            return res.send(200, result.orders);
+//            console.log(result);
+//            db.Order.findAll({where: {UserId: req.params.user_id}}).complete(function (err, results) {
+//
+//                res.send(200, results);
+//            });
+
+
         });
-
-
     });
 });
 
