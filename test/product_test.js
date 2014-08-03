@@ -53,14 +53,14 @@ describe("Product", function () {
     });
 
 
-    describe("Post", function() {
+    describe("Post", function () {
         it("create product", function (done) {
             request(app).post("/products").send({name: "big apple", price: 1}).expect(201).end(function (err, res) {
                 if (err) {
                     return done(err);
                 }
 
-                db.Product.find({where: {name: "big apple"}}).success(function(findProduct) {
+                db.Product.find({where: {name: "big apple"}}).success(function (findProduct) {
                     res.get('location').should.eql('/products/' + findProduct.id);
                     findProduct.price.should.eql(1);
                 }).fail(function (err) {
@@ -70,5 +70,5 @@ describe("Product", function () {
                 done();
             });
         });
-    })
+    });
 });

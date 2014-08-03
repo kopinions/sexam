@@ -31,4 +31,14 @@ router.get('/:user_id/orders/:order_id', function (req, res) {
         });
     });
 });
+
+
+router.post('/:user_id/orders', function (req, res) {
+    db.User.find(req.params.user_id).complete(function (err, result) {
+        if (err || !result) {
+            return res.send(404);
+        }
+        res.send(201);
+    });
+});
 module.exports = router;

@@ -43,7 +43,7 @@ describe("Order", function () {
 
     describe("Get Order", function () {
         it("get by id", function (done) {
-            request(app).get("/users/" + sofia.id + "/orders/" + 1).expect(200).end(function (err, result) {
+            request(app).get("/users/" + sofia.id + "/orders/" + kaylaOrder.id).expect(200).end(function (err, result) {
                 if (err) {
                     return done(err);
                 }
@@ -57,6 +57,19 @@ describe("Order", function () {
                 if (err) {
                     return done(err);
                 }
+                done();
+            });
+        });
+    });
+
+
+    describe("Post", function () {
+        it("create user order", function (done) {
+            request(app).post("/users/" + sofia.id + "/orders").send({receiver: "samiu", shippingAddress: "beijing"}).expect(201).end(function (err, res) {
+                if (err) {
+                    return done(err);
+                }
+
                 done();
             });
         });
