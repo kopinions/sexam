@@ -8,15 +8,22 @@ var should = require("should");
 describe("Product", function () {
     var apple;
     before(function(done) {
-        db.Product.create({name: "little apple"}).success(function(result) {
-            apple = result;
-            done();
+        db.Product.destroy({}, {truncate: true}).success(function (affectRow) {
+            db.Product.create({name: "little apple", price: 2}).success(function(result) {
+                apple = result;
+                done();
+            });
+        }).fail(function (err) {
+            done(err);
         });
+
     });
 
-    afterEach(function(done) {
-        db.Product.destroy({name: "big apple"}).success(function (affectRow) {
+    after(function(done) {
+        db.Product.destroy({}, {truncate: true}).success(function (affectRow) {
             done();
+        }).fail(function (err) {
+            done(err);
         });
     });
 
@@ -26,6 +33,12 @@ describe("Product", function () {
                 if (err) {
                     return done(err);
                 }
+
+                console.log(result.body);
+
+                result.body.length.should.eql(1);
+                result.body[0].name.should.eql("little apple");
+                result.body[0].price.should.eql(2);
                 done();
             });
         });

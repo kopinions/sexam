@@ -27,7 +27,7 @@ describe("Order", function () {
         db.Order.destroy({receiver: "samiu"}).success(function (affect) {
             done();
         }).fail(function (err) {
-            console.log(err);
+
             done(err);
         });
     });
