@@ -83,10 +83,16 @@ describe("Order", function () {
 
     describe("Get Order", function () {
         it("get by id", function (done) {
-            request(app).get("/users/" + sofia.id + "/orders/" + kaylaOrder.id).expect(200).end(function (err, result) {
+            var orderUri = "/users/" + sofia.id + "/orders/" + kaylaOrder.id;
+            request(app).get(orderUri).expect(200).end(function (err, result) {
                 if (err) {
                     return done(err);
                 }
+
+                result.body.receiver.should.eql("kayla");
+                result.body.shippingAddress.should.eql("beijing");
+                result.body.uri.should.eql(orderUri);
+
                 done();
             });
         });
