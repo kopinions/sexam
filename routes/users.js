@@ -53,16 +53,28 @@ router.get('/:user_id/orders/:order_id', function (req, res) {
 
 
 router.post('/:user_id/orders', function (req, res) {
-    db.User.find(req.params.user_id).complete(function (err, result) {
-        if (err || !result) {
+    db.User.find(req.params.user_id).complete(function (err, user) {
+        if (err || !user) {
             return res.send(404);
         }
-        db.Order.create({receiver: req.body.receiver, shippingAddress: req.body.shippingAddress}).complete(function (err, order) {
-            if (err || !order) {
-                return res.send(400);
-            }
-            res.location("/users/" + result.id + "/orders/" + order.id);
-            res.send(201);
+
+        db.Order.hasMany(db.OrderItem);
+        db.OrderItem.belongsTo(db.Order);
+
+        db.Order.create({receiver: req.body.receiver, shippingAddress: req.body.shippingAddress}).success(function (order) {
+            db.OrderItem.create({quantity: req.body.orderItems[0].quantity}).success(function (orderItem) {
+                db.Product.find({where: {id: req.body.orderItems[0].productId}}).success(function (product) {
+                    orderItem.setProduct(product).success(function() {
+                        order.setOrderItems([orderItem]).success(function () {
+                            user.setOrders([order]).success(function () {
+
+                                res.location("/users/" + user.id + "/orders/" + order.id);
+                                res.send(201);
+                            });
+                        });
+                    });
+                });
+            });
         });
     });
 });

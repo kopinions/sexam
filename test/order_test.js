@@ -8,6 +8,7 @@ var should = require("should");
 describe("Order", function () {
     var sofia;
     var kaylaOrder;
+    var apple;
 
     before(function (done) {
 
@@ -40,6 +41,7 @@ describe("Order", function () {
             db.sequelize.sync({force: true}).success(function () {
                 db.Product.create({name: 'little apple', price: 10}).success(
                     function (product) {
+                        apple = product;
                         db.User.create({name: "sofia"}).success(function (user) {
                             sofia = user;
                             db.Order.create({receiver: "kayla", shippingAddress: "beijing"}).success(function (order) {
@@ -126,20 +128,22 @@ describe("Order", function () {
         it("create user order", function (done) {
             request(app)
                 .post("/users/" + sofia.id + "/orders")
-                .send({receiver: "samiu", shippingAddress: "beijing"})
+                .send({receiver: "samiu", shippingAddress: "beijing", orderItems: [{productId:apple.id, quantity: 1}]})
                 .expect(201)
                 .end(function (err, res) {
                     if (err) {
                         return done(err);
                     }
 
-                    db.Order.find({where: {receiver: "samiu"}}).success(function (findedOrder) {
+                    db.Order.find({where: {receiver: "samiu"}, include: [db.OrderItem]}).success(function (findedOrder) {
                         if (findedOrder === null) {
                             return done("not find order");
                         }
+                        console.log(findedOrder);
                         res.get('location').should.eql("/users/" + sofia.id + "/orders/" + findedOrder.id);
                         findedOrder.receiver.should.eql("samiu");
                         findedOrder.shippingAddress.should.eql("beijing");
+                        findedOrder.orderItems.length.should.eql(1);
                         done();
                     }).fail(function (err) {
                         return done(err);
