@@ -1,21 +1,21 @@
 {
   "development": {
-    "username": "twerx",
+    "username": "twer",
     "password": null,
     "database": "order_development",
     "host": "127.0.0.1",
     "dialect": "postgres"
   },
   "test": {
-    "username": "twerxx",
+    "username": "twer",
     "password": null,
     "database": "order_test",
     "host": "127.0.0.1",
     "dialect": "sqlite"
   },
   "production": {
-    "username": "twer2",
-    "password": "twer2",
+    "username": "twer",
+    "password": "twer",
     "database": "order",
     "host": "localhost",
     "dialect": "postgres"

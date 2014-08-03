@@ -23,14 +23,17 @@ plan.local("deploy", function(local) {
 plan.remote(['deploy'], function(remote) {
   remote.log('Move folder to web root');
 
+    remote.failsafe();
   var result = remote.exec("test -e /home/vagrant/sexam");
-  if(result["code"] !== 0) {
+    remote.unsafe();
+    if(result["code"] !== 0) {
       remote.exec('git clone ' + repo, 'sexam');
   } else {
       remote.with("cd /home/vagrant/sexam", function () {
           remote.exec("git pull");
       });
   }
+
 
   remote.log('Install dependencies');
   remote.exec("ls -l /tmp");
