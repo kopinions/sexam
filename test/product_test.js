@@ -14,6 +14,15 @@ describe("Product", function () {
         });
     });
 
+    after(function(done) {
+        db.Product.destroy({name: "big apple"}).success(function (affectRow) {
+            if (affectRow === 0) {
+                return done("not delete product");
+            }
+            done();
+        });
+    });
+
     describe("Get products", function () {
         it("get", function (done) {
             request(app).get("/products").expect(200).end(function (err, result) {
@@ -49,11 +58,17 @@ describe("Product", function () {
 
     describe("Post", function() {
         it("create product", function (done) {
-            request(app).post("/products").send({name: "bit apple"}).expect(201).end(function (err, res) {
+            request(app).post("/products").send({name: "big apple", price: 1}).expect(201).end(function (err, res) {
                 if (err) {
                     return done(err);
                 }
-                res.get('location').should.eql('/products/' + (apple.id +1));
+
+                db.Product.find({where: {name: "big apple"}}).success(function(findProduct) {
+                    res.get('location').should.eql('/products/' + findProduct.id);
+                }).fail(function (err) {
+                    return done(err);
+                });
+
                 done();
             });
         });

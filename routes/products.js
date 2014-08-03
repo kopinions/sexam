@@ -7,7 +7,6 @@ router.get('/', function(req, res) {
 });
 
 router.get('/:id', function (req, res) {
-    console.log(req.params.id);
     db.Product.find(req.params.id).complete(function(err, result) {
         if(err || !result) {
             return res.send(404);
@@ -18,11 +17,12 @@ router.get('/:id', function (req, res) {
 });
 
 router.post('/', function (req, res) {
-    db.Product.create({name: req.params.name}).complete(function(err, result) {
+    db.Product.create({name: req.body.name}).complete(function(err, result) {
         if (err) {
             return res.send(400);
         }
-
+        console.log(result
+        );
         res.location('/products/' + result.id);
         res.send(201);
     });
