@@ -1,0 +1,12 @@
+local ansible_ssh_host=192.168.33.10
+
+
+[localenv]
+local
+
+[cienv]
+ci
+
+[all_groups:children]
+localenv
+cienv
