@@ -17,4 +17,8 @@ router.get('/:id', function (req, res) {
 
 });
 
+router.post('/', function (req, res) {
+    res.send(201);
+});
+
 module.exports = router;

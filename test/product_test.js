@@ -42,4 +42,17 @@ describe("Product", function () {
             });
         });
     });
+
+
+    describe("Post", function() {
+        it("create product", function (done) {
+            request(app).post("/products").send({name: "bit apple"}).expect(201).end(function (err, result) {
+                if (err) {
+                    return done(err);
+                }
+
+                done();
+            });
+        });
+    })
 });
