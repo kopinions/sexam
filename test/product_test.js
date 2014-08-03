@@ -34,8 +34,6 @@ describe("Product", function () {
                     return done(err);
                 }
 
-
-
                 result.body.length.should.eql(1);
 
                 result.body[0].name.should.eql("little apple");
@@ -53,6 +51,10 @@ describe("Product", function () {
                 if (err) {
                     return done(err);
                 }
+                result.body.name.should.eql("little apple");
+                result.body.price.should.eql(2);
+                result.body.uri.should.eql("/products/" + apple.id);
+
                 done();
             });
         });

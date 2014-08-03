@@ -16,7 +16,6 @@ router.get('/', function(req, res) {
         });
 
         return res.send(resultsWithUri);
-
     });
 
 });
@@ -26,7 +25,12 @@ router.get('/:id', function (req, res) {
         if(err || !result) {
             return res.send(404);
         }
-        res.send(200);
+        var respon = {
+            name: result.name,
+            uri: "/products/" + result.id,
+            price: result.price
+        };
+        res.send(200, respon);
     });
 
 });
